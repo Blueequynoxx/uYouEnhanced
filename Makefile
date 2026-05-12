@@ -39,7 +39,8 @@ $(TWEAK_NAME)_INJECT_DYLIBS = \
     $(THEOS_OBJ_DIR)/iSponsorBlock.dylib \
     $(THEOS_OBJ_DIR)/YTABConfig.dylib \
     $(THEOS_OBJ_DIR)/YTIcons.dylib \
-    $(THEOS_OBJ_DIR)/YouGroupSettings.dylib \
+    $(THEOS_OBJ_DIR)/DontEatMyContent.dylib \
+    $(THEOS_OBJ_DIR)/YTIcons.dylib \
     $(THEOS_OBJ_DIR)/YouLoop.dylib \
     $(THEOS_OBJ_DIR)/YouMute.dylib \
     $(THEOS_OBJ_DIR)/YouPiP.dylib \
