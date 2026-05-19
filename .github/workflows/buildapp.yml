@@ -141,6 +141,27 @@ jobs:
         id: build_package
         run: |
           cd ${{ github.workspace }}/main
+
+          echo "==> Debug: Find YouTube binary"
+          find . -path "*YouTube.app/YouTube" -type f || true
+
+          echo "==> Debug: Check YouTube encryption"
+          YTBIN=$(find . -path "*YouTube.app/YouTube" -type f | head -n 1)
+          echo "YTBIN=$YTBIN"
+          if [ -n "$YTBIN" ]; then
+            otool -l "$YTBIN" | grep -A4 LC_ENCRYPTION_INFO_64 || true
+          fi
+
+          echo "==> Debug: Find DontEatMyContent"
+          find . -name "DontEatMyContent.dylib" -type f || true
+
+          echo "==> Debug: Check DontEatMyContent architecture"
+          DEMC=$(find . -name "DontEatMyContent.dylib" -type f | head -n 1)
+          echo "DEMC=$DEMC"
+          if [ -n "$DEMC" ]; then
+            file "$DEMC"
+          fi
+
           sed -i '' "30s#.*#BUNDLE_ID = ${{ env.BUNDLE_ID }}#g" Makefile                          # Modify the bundle ID
           sed -i '' "29s#.*#DISPLAY_NAME = ${{ env.APP_NAME }}#g" Makefile                        # Modify the app name
           sed -i '' "1s#.*#export TARGET = iphone:clang:${{ inputs.sdk_version }}:14.0#g" Makefile # Modify the SDK version
@@ -148,7 +169,6 @@ jobs:
           echo "package=$(ls -t packages | head -n1)" >>$GITHUB_OUTPUT
           echo -e "==> \033[1mSHASUM256: $(shasum -a 256 packages/*.ipa | cut -f1 -d' ')\033[0m"
           echo -e "==> \033[1mBundle ID: ${{ env.BUNDLE_ID }}\033[0m"
-
         env:
           THEOS: ${{ github.workspace }}/theos
           UYOU_VERSION: ${{ inputs.uyou_version }}
